@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Project specific data - ignore large raw files
+data/raw/*.csv
+data/processed/*.parquet
+
+# Trained models (optional depending on size, usually good to ignore if large)
+saved_models/*.pkl
+saved_models/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
