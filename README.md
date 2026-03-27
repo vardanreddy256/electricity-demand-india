@@ -4,9 +4,11 @@
 > Full-stack data science project | FastAPI + ML (XGBoost, LightGBM, RandomForest) + Premium Web Dashboard
 
 ## 👥 Team
-- **[Your Name]** — Role/Contribution
-- **[Teammate 1 Name]** — Role/Contribution
-- **[Teammate 2 Name]** — Role/Contribution
+- **[Your Name]** — **Project Lead & Full-Stack Architect**: Designed system architecture, integrated FastAPI backend with the dashboard, and oversaw project delivery.
+- **[Teammate 2 Name]** — **Machine Learning Engineer**: Developed the predictive forecasting pipeline, trained XGBoost/LightGBM/RandomForest models, and evaluated metrics.
+- **[Teammate 3 Name]** — **Data Engineer / Analyst**: Responsible for data cleaning, preprocessing the 46,000+ hourly records, and engineering cyclical/lag features.
+- **[Teammate 4 Name]** — **Frontend Developer & UI Designer**: Built the responsive, custom dark-themed UI, implemented Chart.js data visualizations, and designed the grid.
+- **[Teammate 5 Name]** — **Backend API Developer**: Created the FastAPI endpoints, implemented efficient server-side data routing, and structured the project backend architecture.
 
 ---
 
