@@ -13,9 +13,9 @@ ENV/
 data/raw/*.csv
 data/processed/*.parquet
 
-# Trained models (optional depending on size, usually good to ignore if large)
-saved_models/*.pkl
-saved_models/
+# Trained models (tracked via git-lfs instead of ignored)
+# saved_models/*.pkl
+# saved_models/
 
 # OS generated files
 .DS_Store
