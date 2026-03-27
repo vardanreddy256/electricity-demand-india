@@ -11,7 +11,7 @@ ENV/
 
 # Project specific data - ignore large raw files
 data/raw/*.csv
-data/processed/*.parquet
+# data/processed/*.parquet
 
 # Trained models (tracked via git-lfs instead of ignored)
 # saved_models/*.pkl
