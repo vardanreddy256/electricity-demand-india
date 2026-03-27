@@ -31,6 +31,7 @@ const API = {
   // Forecast
   actuals:     (freq, start, end) => apiFetch('/api/forecast/actuals', { freq, start, end }),
   predict:     (model, steps)     => apiFetch('/api/forecast/predict', { model, steps }),
+  future:      (model, steps)     => apiFetch('/api/forecast/future', { model, steps }),
   featureImp:  (model)            => apiFetch('/api/forecast/feature-importance', { model }),
 
   // Grid

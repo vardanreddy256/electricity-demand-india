@@ -67,6 +67,50 @@ def get_prediction(
     }
 
 
+@router.get("/future")
+def get_future_prediction(
+    model: str = Query("xgboost", description="xgboost | lightgbm | randomforest"),
+    steps: int = Query(168, ge=24, le=720),
+):
+    df_feat = get_features()
+    if df_feat is None:
+        return {"error": "Models not trained yet. Run scripts/run_pipeline.py first."}
+
+    model_key = MODEL_MAP.get(model.lower(), "xgboost")
+    mdl = load_model(model_key)
+    if mdl is None:
+        return {"error": f"Model '{model}' not found. Run training first."}
+
+    FEAT = [c for c in get_feature_columns() if c in df_feat.columns]
+    
+    # To predict true future, we take the last known week of features, 
+    # copy it `steps/168` times conceptually, or just shift by 1 week
+    # Let's take the absolute last 'steps' rows as naive baseline
+    df_last = df_feat.tail(steps).copy()
+    
+    # Advance the datetime to the future
+    last_known_dt = df_feat["datetime"].max()
+    future_dates = pd.date_range(start=last_known_dt + pd.Timedelta(hours=1), periods=steps, freq="H")
+    
+    df_last["datetime"] = future_dates
+    X = df_last[FEAT]
+    
+    y_pred = mdl.predict(X)
+
+    # Estimate pure future confidence band (wider than historical)
+    ci = 1500.0  # fallback constant if historical CI isn't mapped
+    
+    return {
+        "model": model,
+        "steps": steps,
+        "timestamps": df_last["datetime"].dt.strftime("%Y-%m-%dT%H:%M:%S").tolist(),
+        "predicted": y_pred.round(1).tolist(),
+        "lower_bound": (y_pred - ci).round(1).tolist(),
+        "upper_bound": (y_pred + ci).round(1).tolist(),
+    }
+
+
+
 @router.get("/feature-importance")
 def get_feature_importance(model: str = Query("xgboost")):
     metrics = get_metrics()

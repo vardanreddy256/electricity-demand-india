@@ -88,6 +88,7 @@ const ForecastPage = {
     btn.textContent = '⏳ Running...';
     btn.disabled = true;
     const d = await API.predict(this.activeModel, this.activeSteps);
+    const f = await API.future(this.activeModel, this.activeSteps);
     btn.textContent = '⚡ Run Forecast';
     btn.disabled = false;
 
@@ -110,31 +111,58 @@ const ForecastPage = {
     document.getElementById('forecast-chart-area').innerHTML = `<div class="chart-wrap xlarge"><canvas id="chart-forecast"></canvas></div>`;
     destroyChart('chart-forecast');
     const ctx = document.getElementById('chart-forecast').getContext('2d');
-    const labels = d.timestamps.map(t => t.slice(5,16).replace('T',' '));
+    
+    const histLabels = d.timestamps.map(t => t.slice(5,16).replace('T',' '));
+    const futLabels = f ? f.timestamps.map(t => t.slice(5,16).replace('T',' ')) : [];
+    const labels = [...histLabels, ...futLabels];
+
+    const futNulls = Array(f ? f.timestamps.length : 0).fill(null);
+    const histEnd = Array(d.predicted.length - 1).fill(null);
+    
+    // Stitch future data precisely to the end of historical data
+    const futData = f ? [...histEnd, d.predicted[d.predicted.length - 1], ...f.predicted] : [];
+    const futUpper = f ? [...histEnd, d.upper_bound[d.upper_bound.length - 1], ...f.upper_bound] : [];
+    const futLower = f ? [...histEnd, d.lower_bound[d.lower_bound.length - 1], ...f.lower_bound] : [];
+
     new Chart(ctx, {
       type: 'line',
       data: {
         labels,
         datasets: [
           {
-            label: 'Actual', data: d.actual,
+            label: 'Actual (Test)', data: [...d.actual, ...futNulls],
             borderColor: '#94a3b8', borderWidth: 1.5,
             fill: false, tension: 0.2, pointRadius: 0,
           },
           {
-            label: 'Predicted', data: d.predicted,
+            label: 'Predicted (Test)', data: [...d.predicted, ...futNulls],
             borderColor: '#6366f1', borderWidth: 2,
             fill: false, tension: 0.2, pointRadius: 0,
           },
           {
-            label: 'Upper CI', data: d.upper_bound,
+            label: 'Future Forecast (Extrapolated)', data: futData,
+            borderColor: '#ec4899', borderWidth: 2, borderDash: [5, 5],
+            fill: false, tension: 0.2, pointRadius: 0,
+          },
+          {
+            label: 'Upper CI (Test)', data: [...d.upper_bound, ...futNulls],
             borderColor: 'transparent', fill: '+1',
             backgroundColor: 'rgba(99,102,241,0.1)', tension: 0.2, pointRadius: 0,
           },
           {
-            label: 'Lower CI', data: d.lower_bound,
+            label: 'Lower CI (Test)', data: [...d.lower_bound, ...futNulls],
             borderColor: 'transparent', fill: false,
             backgroundColor: 'rgba(99,102,241,0.1)', tension: 0.2, pointRadius: 0,
+          },
+          {
+            label: 'Upper CI (Future)', data: futUpper,
+            borderColor: 'transparent', fill: '+1',
+            backgroundColor: 'rgba(236,72,153,0.1)', tension: 0.2, pointRadius: 0,
+          },
+          {
+            label: 'Lower CI (Future)', data: futLower,
+            borderColor: 'transparent', fill: false,
+            backgroundColor: 'rgba(236,72,153,0.1)', tension: 0.2, pointRadius: 0,
           },
         ],
       },
