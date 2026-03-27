@@ -25,11 +25,21 @@ REGION_COLS = [
 ]
 
 
+DATASET_FILENAME = "enhanced_hourly_electricity_dataset.csv"
+
+
 def load_raw_data(filepath=None) -> pd.DataFrame:
     if filepath is None:
         csv_files = list(RAW_DIR.glob("*.csv"))
         if not csv_files:
-            raise FileNotFoundError(f"No CSV found in {RAW_DIR}")
+            # Fall back to well-known dataset at repository root
+            root_csv = ROOT / DATASET_FILENAME
+            if root_csv.exists():
+                csv_files = [root_csv]
+        if not csv_files:
+            raise FileNotFoundError(
+                f"Dataset not found. Place '{DATASET_FILENAME}' in {RAW_DIR}"
+            )
         filepath = csv_files[0]
     logger.info(f"Loading: {filepath}")
     df = pd.read_csv(filepath)
