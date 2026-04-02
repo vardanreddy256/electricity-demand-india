@@ -423,7 +423,7 @@ with tab1:
                        font=dict(size=15, color="#aaccff")),
             xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", zeroline=False),
             yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)",
-                       title="Demand (MW)", titlefont=dict(color="#7a92b8")),
+                       title=dict(text="Demand (MW)", font=dict(color="#7a92b8"))),
             hovermode="x unified",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             margin=dict(l=0, r=0, t=50, b=0),
@@ -444,7 +444,7 @@ with tab1:
                 y=[c.replace(" Hourly Demand", "").replace(" Demand", "") for c in demand_cols],
                 colorscale="Viridis",
                 hoverongaps=False,
-                colorbar=dict(title="MW", titlefont=dict(color="#aaddff"), tickfont=dict(color="#aaddff"))
+                colorbar=dict(title=dict(text="MW", font=dict(color="#aaddff")), tickfont=dict(color="#aaddff"))
             ))
             fig_h.update_layout(
                 template="plotly_dark",
