@@ -1,27 +1,19 @@
-# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Virtual Environment
-.venv/
-venv/
+*.so
+.env
+.venv
 env/
-ENV/
+venv/
 
-# Project specific data - ignore large raw files
-data/raw/*.csv
-# data/processed/*.parquet
+# Ignore the old 1MB model
+model.pkl
 
-# Trained models (tracked via git-lfs instead of ignored)
-# saved_models/*.pkl
-# saved_models/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# IDEs
-.vscode/
-.idea/
-*.swp
+# Keep the following required runtime files (track with LFS ideally)
+!model_dict.pkl
+!model_meta.pkl
+!features.pkl
+!scaler.pkl
+!season_encoder.pkl
+!enhanced_hourly_electricity_dataset.csv
